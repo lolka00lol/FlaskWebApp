@@ -1,4 +1,4 @@
---- # yamllint disable-line rule:new-lines
+---  # yamllint disable-line rule:new-lines
 pre-commit:
   commands:
     yamllint:
