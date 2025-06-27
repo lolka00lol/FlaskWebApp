@@ -1,5 +1,5 @@
 venv
 __pycache__
-semgrep-rules
-!*.yml
-!*.yaml
+semgrep-rules/**/*.*
+!semgrep-rules/**/*.yml
+!semgrep-rules/**/*.yaml
