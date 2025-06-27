@@ -1,0 +1,48 @@
+    {% extends 'base.html' %}
+
+    {% block body %}
+    {% include 'header.html' %}
+    <div class="modal modal__hidden">
+        <form action="/add_news" method="post">
+            <fieldset>
+                <input type="text" name="title" placeholder="Заголовок" required>
+                <input type="text" name="title_imageurl" placeholder="Картинка для статьи (URL)" required>
+                <textarea type="text" name="description" cols="30" rows="10" placeholder="Статья" required>Здесь описывается Ваша статья! 😀</textarea>
+            </fieldset>
+            <button type="submit">Подтвердить</button>
+            <button onclick="(() => {document.getElementsByClassName('modal')[0].classList.add('modal__hidden')})();">Отмена</button>
+        </form>
+    </div>
+
+    <div id="profile__menu">
+        <div>
+            <div id="menu">
+                <h3>Добро пожаловать, {{ session.username }} ({{ session.user_id }})</h3>
+                <form action="/update" method="post">
+                    <fieldset>
+                        <input type="password" name="new_password" placeholder="Новый пароль" required>
+                    </fieldset>
+                    <button type="submit">Сменить пароль</button>
+                </form>
+                <a style="all: unset;" href="{{ url_for('logout') }}"><button>Выйти из аккаунта</button></a>
+            </div>
+        </div>
+        <div id="mynews">
+            {% for article in news %}
+                {% if session.user_id == article[1] %}
+                    <article class="article">
+                        <a href="/post/{{ article[0] }}">
+                            <img src="{{ article[3] }}" alt="image">
+                            <h1>{{ article[2] }} | {{ session.username }}</h1>
+                        </a>
+                        <form>
+                            <button class="button__remove" formmethod="post" formaction="{{ url_for('delete_news', news_id=article[0]) }}">Удалить</button>
+                        </form>
+                    </article>
+                {% endif %}
+            {% endfor %}
+            <button onclick="(() => {document.getElementsByClassName('modal')[0].classList.remove('modal__hidden')})();">Добавить статью</button>
+        </div>
+    </div>
+    {% include 'footer.html' %}
+    {% endblock %}

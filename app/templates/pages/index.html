@@ -1,0 +1,16 @@
+    {% extends 'base.html' %}
+
+    {% block body %}
+    {% include 'header.html' %}
+    <main>
+        {% for article in news %}
+            <article class="article">
+                <a href="/post/{{ article[0] }}">
+                    <img src="{{ article[3] }}" alt="image">
+                    <h1>{{ article[2] }} | {{ article[6] }}</h1>
+                </a>
+            </article>
+        {% endfor %}   
+    </main>
+    {% include 'footer.html' %}
+    {% endblock %}

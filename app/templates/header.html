@@ -1,0 +1,14 @@
+    <header class="fixed__panel">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Логотип" id="logo">
+        <nav id="navigation">
+            <ul>
+                <li><a href="{{ url_for('home') }}" class="nav__links">Статьи</a></li>
+                <li><a href="{{ url_for('contacts') }}" class="nav__links">Контакты</a></li>
+                {% if session.username %}
+                    <li><a href="{{ url_for('profile') }}" class="nav__links">Профиль</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('auth') }}" class="nav__links">Войти</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>

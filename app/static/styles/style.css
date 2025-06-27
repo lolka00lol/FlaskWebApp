@@ -1,0 +1,401 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&family=Roboto:wght@300&display=swap');
+
+:root {
+    --header-primary-color: #0b3673;
+    --button-disabled-color: #afafaf;
+    --button-linked-color: #729cd6;
+    --button-hover-color: #dfdfdf;
+    --button-active-color: #7eb1f8;
+    --primary-color: #18427c;
+    --secondary-color: white;
+    --font-size-h1: 16px;
+}
+
+body, * {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    scroll-behavior: smooth;
+    overflow-x: clip;
+    font-family: 'Roboto', 'Roboto Mono', sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+}
+
+*:focus-visible, *:focus {
+    outline: none;
+}
+
+/* --------------UTILITY CSS--------------- */
+
+.fixed__panel {
+    top: 0;
+    left: 0;
+    position: fixed;
+    width: calc(100% - 80px);
+}
+
+.disable__btn {
+    color: var(--button-disabled-color) !important;
+    text-decoration: wavy underline;
+    pointer-events: none;
+}
+
+/* --------HEADER WITH NAVIGATION---------- */
+
+header {
+    background-color: var(--header-primary-color);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 40px;
+    flex-wrap: wrap;
+}
+
+#logo {
+    max-height: 90px;
+}
+
+#navigation>ul li {
+    display: inline-block;
+    font-size: var(--font-size-h1);
+}
+
+#navigation>ul li + li {
+    margin-left: 15px;
+}
+
+.nav__links {
+    text-transform: uppercase;
+    color: var(--secondary-color);
+    line-height: 32px;
+    outline: none;
+    transition: color 100ms ease-in-out;
+}
+
+.nav__links:after {
+    bottom: 6px;
+    content: "";
+    display: block;
+    height: 1px;
+    left: 50%;
+    position: relative;
+    background: #fff;
+    transition: width 0.3s ease 0s, left 0.3s ease 0s;
+    width: 0;
+}
+
+.nav__links:hover:after { 
+    width: 100%; 
+    left: 0; 
+}
+
+.nav__links:visited {
+    color: var(--button-linked-color);
+}
+
+.nav__links:hover {
+    color: var(--button-hover-color);
+}
+
+/* --------------MAIN BOARD-------------- */
+
+main {
+    margin-top: 134px;
+}
+
+main > * {
+    margin-bottom: 20px;
+}
+
+.news {
+    width: fit-content;
+    max-width: 712px;
+    margin-inline: 13vw;
+}
+
+.news > a {
+    display: flex;
+    flex-direction: row;
+    background-color: var(--primary-color);
+    padding: 10px;
+}
+
+.news img {
+    max-width: 50%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.news span {
+    margin-left: 5px;
+    font-family: 'Roboto Mono', 'Roboto', sans-serif;
+    color: var(--secondary-color);
+    flex-shrink: 2;
+    border-left: var(--button-active-color) 1px solid;
+    padding-left: 5px;
+    overflow: hidden;
+    display: -webkit-box;
+    line-clamp: 10;
+    -webkit-line-clamp: 10;
+    -webkit-box-orient: vertical;
+}
+
+/* ------------PAGES *CONTACTS* CSS-------------- */
+
+.contacts {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    margin: 0 19px;
+    max-width: min-content;
+    overflow-y: hidden;
+}
+
+.contacts > iframe {
+    min-height: 248px;
+    width: -webkit-fill-available;
+}
+
+.contacts>div {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    width: 64vw;
+    min-width: max-content;
+    max-width: 640px;
+}
+
+.contacts>div>*{
+    margin-top: 10px;
+}
+
+button, input[type="submit"] {
+    margin-top: 10px;
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    padding: 5px;
+    border: 1px solid var(--secondary-color);
+    border-radius: 10px;
+    font-size: 14px;
+    transition: color 250ms, background-color 250ms ease-in-out;
+}
+
+button:hover, input[type="submit"]:hover {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    border: 1px solid var(--button-active-color);
+}
+
+button:active, input[type="submit"]:active {
+    background-color: var(--header-primary-color);
+    border: 1px solid var(--button-active-color);
+}
+
+fieldset {
+    all: unset;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+fieldset input {
+    background-color: var(--secondary-color);
+    border: none;
+    border-radius: 10px;
+    height: 24px;
+    font-size: 14px;
+    padding-left: 10px;
+}
+
+fieldset textarea {
+    border-radius: 10px;
+    font-size: 14px;
+    padding: 10px 0 0 10px;
+}
+
+/* -----------CSS POSTS------------- */
+.post {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--primary-color);
+    padding: 10px;
+}
+
+.post a {
+    margin-top: 10px;
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    padding: 5px;
+    border: 1px solid var(--secondary-color);
+    border-radius: 10px;
+    font-size: 14px;
+    transition: color 250ms, background-color 250ms ease-in-out;
+    width: 10%;
+    text-align: center;
+}
+
+.post a:hover {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    border: 1px solid var(--button-active-color);
+}
+
+.post a:active {
+    background-color: var(--header-primary-color);
+    border: 1px solid var(--button-active-color);
+}
+
+.post img {
+    max-width: 100%;
+    max-height: 80vh;
+    object-fit: cover;
+    object-position: top;
+}
+
+.post span {
+    margin-left: 5px;
+    font-family: 'Roboto Mono', 'Roboto', sans-serif;
+    color: var(--secondary-color);
+    flex-shrink: 2;
+    border-left: var(--button-active-color) 1px solid;
+    padding-left: 5px;
+    overflow: hidden;
+    display: -webkit-box;
+    line-clamp: 10;
+    -webkit-line-clamp: 10;
+    -webkit-box-orient: vertical;
+}
+
+/* --------- AUTH ----------- */
+#panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #dfdfdf;
+    border-radius: 10px;
+    padding: 1em;
+    text-align: center;
+    z-index: 1;
+}
+
+div ~ a {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 0;
+}
+
+/* --------- PROFILE ----------- */
+#profile__menu {
+    margin: 7em 0 0 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 10px;
+}
+
+#menu {
+    text-align: center;
+    background-color: #2F4D86;
+    padding: 15px;
+    border-radius: 25px;
+    position: sticky;
+    top: 7em;
+}
+
+#menu > * {
+    margin-bottom: 10px;
+}
+
+#menu > h3 {
+    color: white;
+}
+
+#menu *[type="password"] {
+    text-align: center;
+    padding: 0;
+}
+
+.modal {
+    position: fixed;
+    box-shadow: 0 0 0 100vw rgba(34, 60, 80, 0.6);
+    padding: 15px;
+    background-color: #2F4D86;
+    border-radius: 25px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+}
+
+.modal__hidden {
+    display: none;
+}
+
+.article {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    gap: 30px;
+    align-items: center;
+    margin-bottom: 10px;
+
+    border-radius: 19px;
+    padding-right: 10px;
+    background-color: var(--header-primary-color);
+}
+
+.article > a {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 10px;
+    color: var(--secondary-color);
+}
+
+.article > a > h1 {
+    font-weight: lighter;
+}
+
+.article > a:visited {
+    color: var(--button-linked-color);
+}
+
+.article > a:hover {
+    color: var(--button-hover-color);
+}
+
+.article > a:active {
+    color: var(--button-active-color);
+}
+
+.article img {
+    height: 140px;
+    width: auto;
+}
+
+/* ------------ POST ------------- */
+.wrapper__post {
+    display: flex;
+    flex-direction: column;
+}
+
+.image__post {
+    max-height: 360px;
+    align-self: center;
+}

@@ -1,0 +1,12 @@
+    {% extends 'base.html' %}
+
+    {% block body %}
+    {% include 'header.html' %}
+        <main class="wrapper__post">
+            <h1>{{ news[0][2] }} | {{ news[0][6] }}</h1>
+            <img class="image__post" src="{{ news[0][3] }}" alt="image">
+            <span class="span__post">{{ news[0][4] }}</span>
+            <button class="button__back" onclick="history.back();">Назад</button>
+        </main>
+    {% include 'footer.html' %}
+    {% endblock %}

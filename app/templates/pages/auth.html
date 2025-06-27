@@ -1,0 +1,15 @@
+    {% extends 'base.html' %}
+
+    {% block body %}
+    <div id="panel">
+        <form action="/login" method="post">
+            <fieldset>
+                <input type="text" name="username" placeholder="Имя пользователя" required>
+                <input type="password" name="password" placeholder="Пароль" required>
+            </fieldset>
+            <button type="submit" formaction="/login">Войти</button>
+            <button type="submit" formaction="/register">Зарегистрироваться</button>
+        </form>
+    </div>
+    <a href="{{ url_for('home') }}"></a>
+    {% endblock %}

@@ -1,0 +1,23 @@
+    {% extends 'base.html' %}
+
+    {% block body %}
+    {% include 'header.html' %}
+    <main>
+        <article class="contacts">
+            <iframe frameborder="0" style="border: 0;" id="gmap_canvas"src="https://maps.google.com/maps?q=Московский просп., 14, Воронеж, Воронежская обл., 394000&t=&z=17&ie=UTF8&iwloc=&output=embed"></iframe>
+            <div>
+                <h3>Контакты</h3>
+                <span>Адрес: Московский просп., 14, Воронеж, Воронежская обл., 394000 </span>
+                <form action="mailto:it-support@itrus.ru" enctype="text/plain">
+                    <fieldset>
+                        <input type="text" id="name" placeholder="Имя">
+                        <input type="email" id="email" placeholder="E-mail">
+                        <textarea name="msg" id="msg" cols="30" rows="10" placeholder="Сообщение"></textarea>
+                    </fieldset>
+                    <input type="submit" value="Отправить">
+                </form>
+            </div>
+        </article>    
+    </main>
+    {% include 'footer.html' %}
+    {% endblock %}
