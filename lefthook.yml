@@ -1,11 +1,11 @@
----  # yamllint disable-line rule:new-lines
+---
 pre-commit:
   commands:
     yamllint:
       glob: "*.{yaml,yml}"
       exclude: "semgrep-rules"
       name: "Linting YAML files with YAMLlint"
-      run: yamllint {all_files}
+      run: yamllint -c ./yamllint.yml {all_files}
     hadolint:
       glob: "Dockerfile*"
       name: "Check Dockerfile on Errors"
