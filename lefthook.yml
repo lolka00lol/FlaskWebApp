@@ -13,12 +13,12 @@ pre-commit:
       glob: "*.py"
       exclude: "venv/**"
       name: "Formatting with black"
-      run: black {all_files}
+      run: black -l 79 {all_files}
     flake8:
       glob: "*.py"
       exclude: "venv/**"
       name: "Linting with flake8"
-      run: flake8 --ignore=E501 {all_files}
+      run: flake8 --ignore E501 {all_files}
     git-secrets:
       name: "Scan secrets in git"
       run: git secrets --scan

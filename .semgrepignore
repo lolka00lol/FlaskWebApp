@@ -1,0 +1,9 @@
+semgrep-rules/
+.github/
+__pycache__/
+venv/
+.dockerignore
+.gitignore
+osv-scanner.toml
+main.db
+lefthook.yml

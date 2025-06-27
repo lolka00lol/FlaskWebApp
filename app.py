@@ -3,7 +3,9 @@ from waitress import serve
 import sqlite3
 from flask_bcrypt import Bcrypt
 
-app = Flask(__name__, template_folder="./app/templates", static_folder="./app/static")
+app = Flask(
+    __name__, template_folder="./app/templates", static_folder="./app/static"
+)
 app.secret_key = "very_secret_key"
 
 bcrypt = Bcrypt(app)
