@@ -1,0 +1,14 @@
+---  # yamllint disable-line rule:new-lines
+path: ./
+verbose: true
+log-file: false
+type:
+  - Dockerfile
+  - CICD
+exclude-paths:
+  - "semgrep-rules/"
+  - "app/"
+  - "venv/"
+  - "__pycache__/"
+report-formats: "html"
+output-path: "reports/IaC"

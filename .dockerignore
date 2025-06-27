@@ -6,3 +6,5 @@ __pycache__
 .lefthook.yml
 semgrep-rules
 .semgrepignore
+reports
+kics.yml
