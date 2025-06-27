@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session
+from waitress import serve
 import sqlite3
 from flask_bcrypt import Bcrypt
 
@@ -171,4 +172,4 @@ def add_news():
     return "Access denied", 401
 
 if __name__ == '__main__':
-    app.run(host='localhost', port=5000, debug=True)
+    serve(app, host='0.0.0.0', port=5000)
