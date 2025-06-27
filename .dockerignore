@@ -1,0 +1,6 @@
+Dockerfile
+venv
+.github
+__pycache__
+.gitignore
+.lefthook.yml
