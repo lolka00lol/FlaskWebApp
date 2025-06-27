@@ -3,6 +3,7 @@ pre-commit:
   commands:
     yamllint:
       glob: "*.{yaml,yml}"
+      exclude: "semgrep-rules"
       name: "Linting YAML files with YAMLlint"
       run: yamllint {all_files}
     hadolint:
