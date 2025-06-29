@@ -8,6 +8,9 @@ app = Flask(
 )
 app.secret_key = "very_secret_key"
 
+# Add support for XSS vulnerabilities
+app.jinja_env.autoescape = lambda template: False
+
 bcrypt = Bcrypt(app)
 
 
@@ -86,14 +89,17 @@ def login():
 
     cur = db.cursor()
 
-    # SQL Injection - 1 | False Positive example
-    cur.execute(f"SELECT * FROM users WHERE username = '{username}'")
+    # SQL Injection - 2 | False Positive example
+    # cur.execute(f"SELECT * FROM users WHERE username = '{username}'")
+    cur.execute(
+        f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
+    )
     user = cur.fetchone()
 
     # if user and bcrypt.check_password_hash(
     #     password=password.encode(), pw_hash=user[2].encode()
     # ):
-    if user and password.encode() == user[2].encode():
+    if user:
         session["user_id"] = user[0]
         session["username"] = user[1]
 
@@ -117,11 +123,16 @@ def register():
 
     cur = db.cursor()
 
-    # SQL Injection - 1
-    cur.execute(
-        # f"INSERT INTO users(username, password) VALUES ('{username}', '{hashed_password.decode()}')"
-        f"INSERT INTO users(username, password) VALUES ('{username}', '{password}')"
-    )
+    # SQL Injection - 1 | False Positive example
+    try:
+        cur.execute(
+            # f"INSERT INTO users(username, password) VALUES ('{username}', '{hashed_password.decode()}')"
+            f"INSERT INTO users(username, password) VALUES ('{username}', '{password}')"
+        )
+    except sqlite3.Error:
+        cur.close()
+        db.close()
+        return "Try another username!", 409
     db.commit()
 
     cur.close()
@@ -136,20 +147,21 @@ def update():
 
     user_id = session["user_id"]
     new_password = request.form["new_password"]
-    new_password_hashed = bcrypt.generate_password_hash(new_password.encode())
+    # new_password_hashed = bcrypt.generate_password_hash(new_password.encode())
 
     if session["username"]:
         cur.execute(
             "UPDATE users SET password = ? WHERE id = ?",
             (
-                new_password_hashed.decode(),
+                # new_password_hashed.decode(),
+                new_password,
                 user_id,
             ),
         )
         cur.close()
         db.commit()
         db.close()
-        return "", 204
+        return redirect(url_for("profile"))
 
     cur.close()
     db.close()
@@ -192,9 +204,9 @@ def add_news():
 
     if session["username"]:
         cur.execute(
-            # XSS vulnarability | We can add html/js in news!
-            f"INSERT INTO news(user_id, title, title_imageurl, description) VALUES (?, {title}, ?, {descNews})",
-            (user_id, imageURL),
+            # XSS vulnerability | We can add ANYTHING in news!
+            "INSERT INTO news(user_id, title, title_imageurl, description) VALUES (?, ?, ?, ?)",
+            (user_id, title, imageURL, descNews),
         )
         cur.close()
         db.commit()
