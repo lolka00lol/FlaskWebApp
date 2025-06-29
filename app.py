@@ -90,9 +90,10 @@ def login():
     cur.execute(f"SELECT * FROM users WHERE username = '{username}'")
     user = cur.fetchone()
 
-    if user and bcrypt.check_password_hash(
-        password=password.encode(), pw_hash=user[2].encode()
-    ):
+    # if user and bcrypt.check_password_hash(
+    #     password=password.encode(), pw_hash=user[2].encode()
+    # ):
+    if user and password.encode() == user[2].encode():
         session["user_id"] = user[0]
         session["username"] = user[1]
 
