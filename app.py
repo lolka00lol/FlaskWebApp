@@ -86,7 +86,7 @@ def login():
 
     cur = db.cursor()
 
-    # SQL Injection - 1
+    # SQL Injection - 1 | False Positive example
     cur.execute(f"SELECT * FROM users WHERE username = '{username}'")
     user = cur.fetchone()
 
@@ -111,13 +111,15 @@ def register():
     username = request.form["username"]
     password = request.form["password"]
 
-    hashed_password = bcrypt.generate_password_hash(password.encode())
+    # If generate passwd hash and compare them, then SQL injection doesn't work
+    # hashed_password = bcrypt.generate_password_hash(password.encode())
 
     cur = db.cursor()
 
     # SQL Injection - 1
     cur.execute(
-        f"INSERT INTO users(username, password) VALUES ('{username}', '{hashed_password.decode()}')"
+        # f"INSERT INTO users(username, password) VALUES ('{username}', '{hashed_password.decode()}')"
+        f"INSERT INTO users(username, password) VALUES ('{username}', '{password}')"
     )
     db.commit()
 
@@ -189,8 +191,9 @@ def add_news():
 
     if session["username"]:
         cur.execute(
-            "INSERT INTO news(user_id, title, title_imageurl, description) VALUES (?, ?, ?, ?)",
-            (user_id, title, imageURL, descNews),
+            # XSS vulnarability | We can add html/js in news!
+            f"INSERT INTO news(user_id, title, title_imageurl, description) VALUES (?, {title}, ?, {descNews})",
+            (user_id, imageURL),
         )
         cur.close()
         db.commit()
