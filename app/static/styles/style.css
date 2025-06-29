@@ -58,6 +58,7 @@ header {
 
 #logo {
     max-height: 90px;
+    pointer-events: none;
 }
 
 #navigation>ul li {
@@ -165,6 +166,7 @@ main > * {
 .contacts > iframe {
     min-height: 248px;
     width: -webkit-fill-available;
+    width: -moz-available;
 }
 
 .contacts>div {
@@ -288,6 +290,7 @@ fieldset textarea {
     padding: 1em;
     text-align: center;
     z-index: 1;
+    overflow-x: hidden;
 }
 
 div ~ a {
@@ -295,6 +298,7 @@ div ~ a {
     width: 100%;
     position: absolute;
     z-index: 0;
+    background-color: var(--header-primary-color);
 }
 
 /* --------- PROFILE ----------- */
