@@ -7,3 +7,4 @@ venv/
 osv-scanner.toml
 main.db
 lefthook.yml
+owaspzap.conf

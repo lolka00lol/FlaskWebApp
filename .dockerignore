@@ -8,3 +8,4 @@ semgrep-rules
 .semgrepignore
 reports
 kics.yml
+owaspzap.conf
