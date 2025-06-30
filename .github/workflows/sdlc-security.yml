@@ -16,7 +16,7 @@ jobs:
         ./
       results-file-name: "osv-results.sarif"
       upload-sarif: true
-      fail-on-vuln: false
+      fail-on-vuln: true
     # steps:
     #   - name: Checkout
     #     uses: actions/checkout@v4
