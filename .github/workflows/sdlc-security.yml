@@ -8,6 +8,7 @@ jobs:
     permissions:
       security-events: write
       actions: read
+      contents: read
     uses: "google/osv-scanner-action/.github/workflows/osv-scanner-reusable-pr.yml@v2.0.3"
     with:
       scan-args: |-
