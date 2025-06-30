@@ -13,13 +13,13 @@ jobs:
       results-file-name: "osv-results.sarif"
       upload-sarif: true
       fail-on-vuln: false
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Upload OSV results to artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: OSV-result
-          path: ./osv-results.sarif
-          if-no-files-fount: error
-          retention-days: 1
+    # steps:
+    #   - name: Checkout
+    #     uses: actions/checkout@v4
+    #   - name: Upload OSV results to artifacts
+    #     uses: actions/upload-artifact@v4
+    #     with:
+    #       name: OSV-result
+    #       path: ./osv-results.sarif
+    #       if-no-files-fount: error
+    #       retention-days: 1
