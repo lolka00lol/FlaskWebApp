@@ -1,0 +1,27 @@
+---
+name: SDLC-Security
+on:
+  push:
+    branches: main
+jobs:
+  SCA:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: OSV-scanning
+        uses: "google/osv-scanner-action/.github/workflows/osv-scanner-reusable-pr.yml@v2.0.3"
+        with:
+          scan-args: |-
+            --lockfile=./requirements.txt
+            ./
+          results-file-name: "osv-results.sarif"
+          upload-sarif: true
+          fail-on-vuln: false
+      - name: Upload OSV results to artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: OSV-result
+          path: ./osv-results.sarif
+          if-no-files-fount: error
+          retention-days: 1
