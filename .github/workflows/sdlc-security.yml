@@ -5,6 +5,9 @@ on:
     branches: main
 jobs:
   SCA:
+    permissions:
+      security-events: write
+      actions: read
     uses: "google/osv-scanner-action/.github/workflows/osv-scanner-reusable-pr.yml@v2.0.3"
     with:
       scan-args: |-
