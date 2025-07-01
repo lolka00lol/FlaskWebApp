@@ -7,18 +7,20 @@ on:
     branches: [main]
 jobs:
   SCA:
-    permissions:
-      security-events: write
-      actions: read
-      contents: read
-    uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable-pr.yml@v2.0.3
-    with:
-      scan-args: |-
-        --lockfile=./requirements.txt
-        ./
-      results-file-name: "osv-results.sarif"
-      upload-sarif: true
-      fail-on-vuln: true
+    steps:
+      - name: OSV Scanning
+        permissions:
+          security-events: write
+          actions: read
+          contents: read
+        uses: google/osv-scanner-action@v2.0.3
+        with:
+          scan-args: |-
+            --lockfile=./requirements.txt
+            ./
+          results-file-name: "osv-results.sarif"
+          upload-sarif: true
+          fail-on-vuln: true
     # steps:
     #   - name: Checkout
     #     uses: actions/checkout@v4
