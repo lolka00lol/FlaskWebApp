@@ -64,9 +64,10 @@ jobs: # if commanted its work!
         uses: checkmarx/kics-github-action@v2.1.10
         with:
           path: ./
-          config_path: ./kics.yml
           output_formats: html,sarif
+          output_path: reports/
           ignore_on_exit: results
+          exclude_paths: "semgrep-rules/,app/,reports/,.github/"
       - name: List files
         run: |
           ls -la ./reports
