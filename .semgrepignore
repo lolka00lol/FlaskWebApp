@@ -5,7 +5,7 @@ venv/
 .dockerignore
 .gitignore
 reports/
+osv-scanner.toml
 main.db
 lefthook.yml
 owaspzap.conf
-kics.json

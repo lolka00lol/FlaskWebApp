@@ -1,0 +1,17 @@
+---
+path: ./
+verbose: true
+log-file: false
+type:
+  - Dockerfile
+  - CICD
+exclude-paths:
+  - "semgrep-rules/"
+  - "app/"
+  - "venv/"
+  - "__pycache__/"
+  - "reports/"
+  - ".github/"
+report-formats: html,sarif
+output-path: ./reports/
+# output-names: "kics-results"
