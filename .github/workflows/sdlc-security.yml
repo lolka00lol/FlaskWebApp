@@ -178,10 +178,11 @@ jobs:  # if commanted its work!
         uses: zaproxy/action-baseline@v0.14.0
         with:
           target: http://localhost:80
+          artifact_name: zap_report
           rules_file_name: ./owaspzap.conf
           cmd_option: "-r result.html"
+          allow_issue_writing: false
           fail_action: false
-          artifact_name: zap_report
     # steps:
     #   - name: Checkout
     #     uses: actions/checkout@v4
