@@ -103,10 +103,8 @@ jobs:  # if commanted its work!
         with:
           image: "mffa:latest"
           fail-build: false
-          output-format:
-            - sarif
-            - table
-          output-file: ./reports/report_grype
+          output-format: sarif
+          output-file: ./reports/report_grype.sarif
       - name: Upload artifact GitHub
         uses: actions/upload-artifact@v4
         with:
