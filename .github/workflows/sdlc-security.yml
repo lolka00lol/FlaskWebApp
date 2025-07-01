@@ -165,7 +165,7 @@ jobs:  # if commanted its work!
       - name: Wait for service to be ready
         run: |
           for i in {1..10}; do
-            if curl -s http://localhost:5000; then
+            if curl -s http://localhost:80; then
               echo "Service ready"
               break
             else
