@@ -10,5 +10,6 @@ exclude-paths:
   - "app/"
   - "venv/"
   - "__pycache__/"
-report-formats: "html"
-output-path: "reports/IaC"
+  - "reports/"
+report-formats: "html,sarif"
+output-path: "./"
