@@ -60,8 +60,8 @@ jobs: # if commanted its work!
         uses: checkmarx/kics-github-action@v2.1.10
         with:
           path: './'
+          config_path: './kics.yml'
           ignore_on_exit: results
-          config_path: ./kics.yml
       - name: List files
         run: |
           ls -la
