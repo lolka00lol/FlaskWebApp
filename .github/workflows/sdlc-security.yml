@@ -142,6 +142,7 @@ jobs:  # if commanted its work!
           path: ${{ runner.temp }}/mffa.tar
   DAST:
     name: ZAP by Checkmarx (DAST) scanning
+    needs: Test
     permissions:
       contents: read
       security-events: write
