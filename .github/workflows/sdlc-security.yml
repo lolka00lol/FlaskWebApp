@@ -61,8 +61,7 @@ jobs: # if commanted its work!
         with:
           path: './'
           ignore_on_exit: results
-          config_path: ./kics.yml
-          output_path: './'
+          config_path: ./kics.config
       - name: List files
         run: |
           ls -la
