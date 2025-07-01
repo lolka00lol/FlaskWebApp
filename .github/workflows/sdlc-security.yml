@@ -23,6 +23,7 @@ jobs:
   SAST:
     permissions:
       contents: read
+      security-events: write
     name: Semgrep scanning
     runs-on: ubuntu-latest
     container:
