@@ -11,5 +11,7 @@ exclude-paths:
   - "venv/"
   - "__pycache__/"
   - "reports/"
-report-formats: "html,sarif"
+  - ".github/"
+report-formats: sarif,html
+output-name: kics-results
 output-path: "./"
