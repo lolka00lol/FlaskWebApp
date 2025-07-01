@@ -7,5 +7,5 @@ __pycache__
 semgrep-rules
 .semgrepignore
 reports
-kics.yml
+kics.json
 owaspzap.conf

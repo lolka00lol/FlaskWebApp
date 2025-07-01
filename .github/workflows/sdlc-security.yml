@@ -64,8 +64,8 @@ jobs: # if commanted its work!
         uses: checkmarx/kics-github-action@v2.1.10
         with:
           path: ./
-          config_path: ./kics.yml
-          output_formats: html,sarif
+          config_path: ./kics.json
+          # output_formats: html,sarif
           ignore_on_exit: results
       - name: List files
         run: |
