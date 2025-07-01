@@ -3,4 +3,3 @@ __pycache__
 semgrep-rules/**/*.*
 !semgrep-rules/**/*.yml
 !semgrep-rules/**/*.yaml
-reports
