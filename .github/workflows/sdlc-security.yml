@@ -6,19 +6,46 @@ on:
   pull_request:
     branches: [main]
 jobs:
-  SCA:
+  # SCA:
+  #   name: OSV Scanning project
+  #   permissions:
+  #     security-events: write
+  #     actions: read
+  #     contents: read
+  #   uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@v2.0.3
+  #   with:
+  #     scan-args: |-
+  #       --lockfile=./requirements.txt
+  #       --no-ignore
+  #     results-file-name: "osv-results.sarif"
+  #     upload-sarif: true
+  #     fail-on-vuln: false
+  SAST:
     permissions:
-      security-events: write
-      actions: read
       contents: read
-    uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@v2.0.3
-    with:
-      scan-args: |-
-        --lockfile=./requirements.txt
-        --no-ignore
-      results-file-name: "osv-results.sarif"
-      upload-sarif: true
-      fail-on-vuln: false
+    name: Semgrep scanning
+    runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep
+    steps:
+      - name: Checkout
+        uses: action/checkout@v4
+      - name: Scan project by semgrep
+        run: semgrep scan -c ./semgrep-rules/ --sarif > semgrep-result.sarif
+        env:
+          PYTHONUTF8: 1 # Without it impossible use RU encode
+      - name: Upload artifact GitHub
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-result
+          path: ./semgrep-result.sarif
+          if-no-files-found: error
+          retention-days: 1
+      - name: Upload SARIF in GitHub Security Dashboard
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: semgrep-result.sarif
+        if: always() # Upload it in anyway
     # steps:
     #   - name: Checkout
     #     uses: actions/checkout@v4
