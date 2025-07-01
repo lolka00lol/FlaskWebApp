@@ -15,5 +15,4 @@ exclude-paths:
 report-formats:
   - sarif
   - html
-output-name: kics-results
 output-path: "./"
