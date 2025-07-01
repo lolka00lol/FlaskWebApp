@@ -1,0 +1,9 @@
+{
+  "path": "./",
+  "type": "Dockerfile,CICD",
+  "exclude-paths": "semgrep-rules/,app/,venv/,__pycache__/,reports/,.github/",
+  "report-formats": "html,sarif",
+  "output-path": "./reports/",
+  "log-file": false,
+  "vebose": true
+}
