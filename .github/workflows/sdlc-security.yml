@@ -59,6 +59,7 @@ jobs: # if commanted its work!
       - name: Run KICS Scan using config
         uses: checkmarx/kics-github-action@v2.1.10
         with:
+          path: './'
           config_path: ./kics.yml
       - name: Upload artifact GitHub
         uses: actions/upload-artifact@v4
