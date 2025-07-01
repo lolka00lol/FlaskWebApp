@@ -5,7 +5,7 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
-jobs: # if commanted its work!
+jobs:  # if commanted its work!
   # SCA:
   #   name: OSV Scanning project
   #   permissions:
@@ -47,49 +47,85 @@ jobs: # if commanted its work!
   #       with:
   #         sarif_file: ./semgrep-results.sarif
   #       if: always() # Upload it in anyway
-  IaC-Scan:
-    name: Infrastructure as Code scanning
-    permissions:
-      contents: read
-      security-events: write
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-      - name: List files
-        run: |
-          mkdir -p ./reports
-          ls -la
-      - name: Run KICS Scan using config
-        uses: checkmarx/kics-github-action@v2.1.10
-        with:
-          path: ./
-          output_formats: html,sarif
-          output_path: reports/
-          ignore_on_exit: results
-          exclude_paths: "semgrep-rules/,app/,reports/,.github/"
-      - name: List files
-        run: |
-          ls -la ./reports
-      - name: Upload artifact GitHub
-        uses: actions/upload-artifact@v4
-        with:
-          name: kics-result
-          path: ./reports
-          if-no-files-found: error
-          retention-days: 1
-      - name: SARIF to GitHub Security Dashboard
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: ./reports/results.sarif
-        if: always()
-    # steps:
-    #   - name: Checkout
-    #     uses: actions/checkout@v4
-    #   - name: Upload OSV results to artifacts
-    #     uses: actions/upload-artifact@v4
-    #     with:
-    #       name: OSV-result
-    #       path: ./osv-results.sarif
-    #       if-no-files-fount: error
-    #       retention-days: 1
+  # IaC-Scan:
+  #   name: Infrastructure as Code scanning
+  #   permissions:
+  #     contents: read
+  #     security-events: write
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout repo
+  #       uses: actions/checkout@v4
+  #     - name: Create reports folder
+  #       run:  mkdir -p ./reports
+  #     - name: Run KICS Scan using config
+  #       uses: checkmarx/kics-github-action@v2.1.10
+  #       with:
+  #         path: ./
+  #         output_formats: html,sarif
+  #         output_path: reports/
+  #         ignore_on_exit: results
+  #         exclude_paths: "semgrep-rules/,app/,reports/,.github/"
+  #     - name: Upload artifact GitHub
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: kics-result
+  #         path: ./reports
+  #         if-no-files-found: error
+  #         retention-days: 1
+  #     - name: SARIF to GitHub Security Dashboard
+  #       uses: github/codeql-action/upload-sarif@v3
+  #       with:
+  #         sarif_file: ./reports/results.sarif
+  #       if: always()
+  ContainerScanning:
+    - name: Container scan of Dockerfile
+      permissions:
+        contents: read
+        security-events: write
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout repo
+          uses: actions/checkout@v4
+        - name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v3
+        - name: Build local container
+          uses: docker/build-push-action@v6
+          with:
+            file: ./Dockerfile
+            tags: mffa:latest
+            push: false
+            load: true
+        - name: Create reports folder
+          run: mkdir -p ./reports
+        - name: Scan image
+          uses: anchore/scan-action@v6
+          with:
+            image: "mffa:latest"
+            fail-build: false
+            output-format:
+              - sarif
+              - table
+            output-file: ./reports/report_grype
+        - name: Upload artifact GitHub
+          uses: actions/upload-artifact@v4
+          with:
+            name: grype-result
+            path: ./reports
+            if-no-files-found: error
+            retention-days: 1
+        - name: SARIF to GitHub Security Dashboard
+          uses: github/codeql-action/upload-sarif@v3
+          with:
+            sarif_file: ./reports/report_grype.sarif
+          if: always()
+      # steps:
+      #   - name: Checkout
+      #     uses: actions/checkout@v4
+      #   - name: Upload OSV results to artifacts
+      #     uses: actions/upload-artifact@v4
+      #     with:
+      #       name: OSV-result
+      #       path: ./osv-results.sarif
+      #       if-no-files-fount: error
+      #       retention-days: 1
