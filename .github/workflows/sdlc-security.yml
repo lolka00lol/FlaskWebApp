@@ -61,7 +61,7 @@ jobs: # if commanted its work!
         with:
           path: './'
           ignore_on_exit: results
-          config_path: ./kics.config
+          config_path: ./kics.yml
       - name: List files
         run: |
           ls -la
@@ -69,13 +69,13 @@ jobs: # if commanted its work!
         uses: actions/upload-artifact@v4
         with:
           name: kics-result
-          path: ./kics-results.sarif
+          path: './results.*'
           if-no-files-found: error
           retention-days: 1
       - name: SARIF to GitHub Security Dashboard
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: ./kics-results.sarif
+          sarif_file: ./results.sarif
         if: always()
     # steps:
     #   - name: Checkout
