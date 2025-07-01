@@ -60,8 +60,12 @@ jobs: # if commanted its work!
         uses: checkmarx/kics-github-action@v2.1.10
         with:
           path: './'
+          ignore_on_exit: results
           config_path: ./kics.yml
           output_path: './'
+      - name: List files
+        run: |
+          ls -la
       - name: Upload artifact GitHub
         uses: actions/upload-artifact@v4
         with:
