@@ -8,12 +8,12 @@ on:
 jobs:
   SCA:
     runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
     steps:
       - name: OSV Scanning
-        # permissions:
-        #   security-events: write
-        #   actions: read
-        #   contents: read
         uses: google/osv-scanner-action@v2.0.3
         with:
           scan-args: |-
