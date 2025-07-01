@@ -21,10 +21,10 @@ jobs:  # if commanted its work!
   #     upload-sarif: true
   #     fail-on-vuln: false
   # SAST:
+  #   name: Semgrep (SAST) scanning
   #   permissions:
   #     contents: read
   #     security-events: write
-  #   name: Semgrep scanning
   #   runs-on: ubuntu-latest
   #   container:
   #     image: semgrep/semgrep
@@ -78,11 +78,49 @@ jobs:  # if commanted its work!
   #       with:
   #         sarif_file: ./reports/results.sarif
   #       if: always()
-  ContainerScanning:
-    name: Container scan of Dockerfile
+  # ContainerScanning:
+  #   name: Container scan of Dockerfile
+  #   permissions:
+  #     contents: read
+  #     security-events: write
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout repo
+  #       uses: actions/checkout@v4
+  #     - name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v3
+  #     - name: Build local container
+  #       uses: docker/build-push-action@v6
+  #       with:
+  #         file: ./Dockerfile
+  #         tags: mffa:latest
+  #         push: false
+  #         load: true
+  #     - name: Create reports folder
+  #       run: mkdir -p ./reports
+  #     - name: Scan image
+  #       uses: anchore/scan-action@v6
+  #       with:
+  #         image: "mffa:latest"
+  #         fail-build: false
+  #         output-format: sarif
+  #         output-file: ./reports/report_grype.sarif
+  #     - name: Upload artifact GitHub
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: grype-result
+  #         path: ./reports
+  #         if-no-files-found: error
+  #         retention-days: 1
+  #     - name: SARIF to GitHub Security Dashboard
+  #       uses: github/codeql-action/upload-sarif@v3
+  #       with:
+  #         sarif_file: ./reports/report_grype.sarif
+  #       if: always()
+  Test:
+    name: Container build
     permissions:
       contents: read
-      security-events: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -96,27 +134,40 @@ jobs:  # if commanted its work!
           tags: mffa:latest
           push: false
           load: true
-      - name: Create reports folder
-        run: mkdir -p ./reports
-      - name: Scan image
-        uses: anchore/scan-action@v6
-        with:
-          image: "mffa:latest"
-          fail-build: false
-          output-format: sarif
-          output-file: ./reports/report_grype.sarif
-      - name: Upload artifact GitHub
+          outputs: type=docker,dest=${{ runner.temp }}/mffa.tar
+      - name: Upload Docker image artifact
         uses: actions/upload-artifact@v4
         with:
-          name: grype-result
-          path: ./reports
-          if-no-files-found: error
-          retention-days: 1
-      - name: SARIF to GitHub Security Dashboard
-        uses: github/codeql-action/upload-sarif@v3
+          name: mffa
+          path: ${{ runner.temp }}/mffa.tar
+  DAST:
+    name: ZAP by Checkmarx (DAST) scanning
+    permissions:
+      contents: read
+      security-events: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      # Docker test
+      - name: Download Docker image artifact
+        uses: actions/download-artifact@v4
         with:
-          sarif_file: ./reports/report_grype.sarif
-        if: always()
+          name: mffa
+          path: ${{ runner.temp }}
+      - name: Load Docker image
+        run: docker load --input ${{ runner.temp }}/mffa.tar
+      - name: Use Docker image
+        run: docker run -d -p 80:5000 mffa:latest
+      # Docker test
+      - name: ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.14.0
+        with:
+          target: http://127.0.0.1:80
+          rules_file_name: ./owaspzap.conf
+          cmd_option: -r result.html
+          fail_action: false
+          artifact_name: zap_report
     # steps:
     #   - name: Checkout
     #     uses: actions/checkout@v4
