@@ -182,7 +182,6 @@ jobs:  # if commanted its work!
           target: http://localhost:80
           artifact_name: zap_report
           rules_file_name: ./owaspzap.conf
-          cmd_options: "-r result.html"
           allow_issue_writing: false
           fail_action: false
     # steps:
