@@ -177,11 +177,12 @@ jobs:  # if commanted its work!
       #     curl -s "http://localhost:80/sqlite?query=INSERT INTO users(username,password) VALUES ('Admin','P@ssw0rd')"
       #     curl -s "http://localhost:80/sqlite?query=INSERT INTO news(user_id,title,title_imageurl,description) VALUES (1, 'Test post', 'https://cs13.pikabu.ru/post_img/2023/07/09/10/1688919144178579044.jpg', '<script>alert(`XSS?!`);</script>')"
       - name: ZAP Baseline Scan
-        uses: zaproxy/action-baseline@v0.14.0
+        uses: zaproxy/action-full-scan@v0.12.0
         with:
-          target: http://localhost:80
+          target: http://localhost/
           artifact_name: zap_report
-          rules_file_name: ./owaspzap.conf
+          # rules_file_name: ./owaspzap.conf
+          cmd_options: '-a'
           allow_issue_writing: false
           fail_action: false
     # steps:
