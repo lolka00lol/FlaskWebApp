@@ -158,7 +158,7 @@ jobs:  # if commanted its work!
       - name: Load docker image
         run: docker load --input ${{ runner.temp }}/msfwa.tar
       - name: Use Docker image
-        run: docker run -d -p 80:5000 msfwa:latest
+        run: docker run -d -p 80:5000 msfwa:latest --nonlocal --test
       # Docker test
       - name: Wait for service to be ready
         run: |
@@ -182,7 +182,7 @@ jobs:  # if commanted its work!
           target: http://localhost:80
           artifact_name: zap_report
           rules_file_name: ./owaspzap.conf
-          cmd_options: '-r result.html'
+          cmd_options: "-r result.html"
           allow_issue_writing: false
           fail_action: false
     # steps:
