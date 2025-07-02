@@ -158,7 +158,7 @@ jobs:  # if commanted its work!
       - name: Load docker image
         run: docker load --input ${{ runner.temp }}/msfwa.tar
       - name: Use Docker image
-        run: docker run -d -p 80:5000 msfwa:latest --nonlocal --test
+        run: docker run -d -p 80:5000 msfwa:latest --nonlocal --testdb
       # Docker test
       - name: Wait for service to be ready
         run: |
