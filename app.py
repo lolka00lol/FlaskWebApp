@@ -1,7 +1,16 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    session,
+    jsonify,
+)
 from waitress import serve
 import sqlite3
 from flask_bcrypt import Bcrypt
+import sys
 
 app = Flask(
     __name__, template_folder="./app/templates", static_folder="./app/static"
@@ -218,5 +227,115 @@ def add_news():
     return "Access denied", 401
 
 
+# ANY REQUESTS TO SQLITE DATABASE | VULNERABILITY TO DO ACTIONS WITHOUT ACCESS
+@app.route("/sqlite", methods=["GET"])
+def sqlite_query():
+    query = request.args.get("query")
+    if not query:
+        return jsonify({"error": "Query parameter is required"}), 400
+
+    db = connect_db()
+    cur = db.cursor()
+
+    try:
+        cur.execute(query)
+
+        # If query is start with SELECT command
+        if query.strip().upper().startswith("SELECT"):
+            row_headers = [x[0] for x in cur.description]
+            rows = cur.fetchall()
+            results = [dict(zip(row_headers, row)) for row in rows]
+
+            cur.close()
+            db.close()
+            return jsonify(results), 200
+
+        affected = cur.rowcount
+        cur.close()
+        db.commit()
+        db.close()
+
+        return (
+            jsonify(
+                {
+                    "msg": f"Query successfully executed, affected rows: {affected}"
+                }
+            ),
+            200,
+        )
+    except Exception as err:
+        cur.close()
+        db.close()
+        return jsonify({"error": str(err)}), 500
+
+
 if __name__ == "__main__":
-    serve(app, host="0.0.0.0", port=5000)
+    _host = "localhost"
+    _port = 5000
+    _debug = False
+    args = sys.argv[1:]
+
+    def help_menu() -> None:
+        print("""
+    My Shitty Flask Web App (MSFWA)!
+=====================================
+help, --help    | Show help menu (command)
+resetdb         | !!!WARNING!!! RESETS DATABASE (command)
+--test, -t      | Use command to test vuln in app
+--nonlocal, -nl | Listing all LAN Interfaces
+--port <value>  | Use for custom port
+=====================================\n""")
+
+    if len(args) > 0:
+        if any(x in args for x in ["--help", "help"]):
+            help_menu()
+            exit(0)
+        if not any(
+            x in args
+            for x in ["--test", "-t", "--nonlocal", "-nl", "--port", "resetdb"]
+        ):
+            help_menu()
+            exit(1)
+        if "resetdb" in args:
+            print("\nAdding new data in DATABASE")
+            db = connect_db()
+            cur = db.cursor()
+            try:
+                cur.execute("DELETE FROM users")
+                cur.execute("DELETE FROM news")
+                cur.execute("UPDATE sqlite_sequence SET seq=0")
+                cur.execute(
+                    "INSERT INTO users(username, password) VALUES ('Admin', 'P@ssw0rd')"
+                )
+                cur.execute(
+                    "INSERT INTO news(user_id, title, title_imageurl, description) VALUES (1, 'Test XSS', 'https://cs13.pikabu.ru/post_img/2023/07/09/10/1688919144178579044.jpg', '<script>alert(`XSS?!`);</script>')"
+                )
+                cur.close()
+                db.commit()
+                db.close()
+            except Exception as err:
+                print("Problem with reset DB, error:\n")
+                print(err)
+                cur.close()
+                db.close()
+                exit(1)
+            print("Complete resetting DB!\n")
+            exit(0)
+        if any(x in args for x in ["--test", "-t"]):
+            _debug = True
+        if any(x in args for x in ["--nonlocal", "-nl"]):
+            _host = "0.0.0.0"
+        if "--port" in args:
+            try:
+                _port = int(args[args.index("--port") + 1])
+            except Exception as err:
+                print("Type error of port argument!\n")
+                print(err)
+    if _debug:
+        print("\nDebug mode: True")
+        app.run(host=_host, port=_port, debug=_debug)
+        exit(0)
+    else:
+        print("\nDebug mode: False")
+        serve(app, host=_host, port=_port)
+        exit(0)
