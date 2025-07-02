@@ -14,4 +14,4 @@ exclude-paths:
   - ".github/"
 report-formats: html,sarif
 output-path: ./reports/
-output-names: "kics-results"
+output-name: "kics-results"
