@@ -120,7 +120,8 @@ def login():
     db.close()
     return "Login failed!", 401
 
-# Identification and authentication errors | Vulnerability 4
+
+# A07:2021 – Identification and Authentication Failures | Vulnerability 4
 @app.route("/register", methods=["POST"])
 def register():
     db = connect_db()
@@ -182,6 +183,7 @@ def logout():
     session.clear()
     return redirect(url_for("home"))
 
+
 # A01:2021 – Broken Access Control (IDOR) | Vulnerability 3
 @app.route("/delete_news/<news_id>", methods=["POST"])
 def delete_news(news_id):
@@ -226,13 +228,15 @@ def add_news():
     db.close()
     return "Access denied", 401
 
-# Open redirects | Vulnerability 5
-@app.route('/redirect')
+
+# Open redirects (A1:2021) | Vulnerability 5
+@app.route("/redirect")
 def open_redirect():
-    target = request.args.get('url')
+    target = request.args.get("url")
     if target:
         return redirect(target)
     return "No URL provided", 400
+
 
 # ANY REQUESTS TO SQLITE DATABASE | VULNERABILITY TO DO ACTIONS WITHOUT ACCESS
 @app.route("/sqlite", methods=["GET"])
