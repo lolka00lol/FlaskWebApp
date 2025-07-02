@@ -98,7 +98,7 @@ def login():
 
     cur = db.cursor()
 
-    # SQL Injection - 2 | False Positive example
+    # A03:2021 – Injection (SQL) 1 | Vulnerability 1
     # cur.execute(f"SELECT * FROM users WHERE username = '{username}'")
     cur.execute(
         f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
@@ -120,7 +120,7 @@ def login():
     db.close()
     return "Login failed!", 401
 
-
+# Identification and authentication errors | Vulnerability 4
 @app.route("/register", methods=["POST"])
 def register():
     db = connect_db()
@@ -132,7 +132,7 @@ def register():
 
     cur = db.cursor()
 
-    # SQL Injection - 1 | False Positive example
+    # A03:2021 – Injection (SQL) 2 | Vulnerability 1 (False Positive)
     try:
         cur.execute(
             # f"INSERT INTO users(username, password) VALUES ('{username}', '{hashed_password.decode()}')"
@@ -182,7 +182,7 @@ def logout():
     session.clear()
     return redirect(url_for("home"))
 
-
+# A01:2021 – Broken Access Control (IDOR) | Vulnerability 3
 @app.route("/delete_news/<news_id>", methods=["POST"])
 def delete_news(news_id):
     db = connect_db()
@@ -200,7 +200,7 @@ def delete_news(news_id):
     return "Access denied", 401
 
 
-# XSS Уязвимость - 2
+# A7:2017 - Cross-Site Scripting (XSS) | Vulnerability 2
 @app.route("/add_news", methods=["POST"])
 def add_news():
     db = connect_db()
@@ -226,6 +226,13 @@ def add_news():
     db.close()
     return "Access denied", 401
 
+# Open redirects | Vulnerability 5
+@app.route('/redirect')
+def open_redirect():
+    target = request.args.get('url')
+    if target:
+        return redirect(target)
+    return "No URL provided", 400
 
 # ANY REQUESTS TO SQLITE DATABASE | VULNERABILITY TO DO ACTIONS WITHOUT ACCESS
 @app.route("/sqlite", methods=["GET"])
