@@ -140,7 +140,7 @@ jobs:  # if commanted its work!
   #       if: always()
   DAST:
     name: ZAP by Checkmarx (DAST) scanning
-    needs: Test
+    needs: BuildContainerImage
     permissions:
       contents: read
       actions: read

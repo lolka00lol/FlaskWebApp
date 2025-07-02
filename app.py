@@ -276,7 +276,8 @@ if __name__ == "__main__":
     args = sys.argv[1:]
 
     def help_menu() -> None:
-        print("""
+        print(
+            """
     My Shitty Flask Web App (MSFWA)!
 =====================================
 help, --help    | Show help menu (command)
@@ -284,7 +285,8 @@ resetdb         | !!!WARNING!!! RESETS DATABASE (command)
 --test, -t      | Use command to test vuln in app
 --nonlocal, -nl | Listing all LAN Interfaces
 --port <value>  | Use for custom port
-=====================================\n""")
+=====================================\n"""
+        )
 
     if len(args) > 0:
         if any(x in args for x in ["--help", "help"]):
