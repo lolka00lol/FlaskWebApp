@@ -3,81 +3,79 @@ name: SDLC-Security
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
-jobs:  # if commanted its work!
-  # SCA:
-  #   name: OSV Scanning project
-  #   permissions:
-  #     security-events: write
-  #     actions: read
-  #     contents: read
-  #   uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@v2.0.3
-  #   with:
-  #     scan-args: |-
-  #       --lockfile=./requirements.txt
-  #       --no-ignore
-  #     results-file-name: osv-results.sarif
-  #     upload-sarif: true
-  #     fail-on-vuln: false
-  # SAST:
-  #   name: Semgrep (SAST) scanning
-  #   permissions:
-  #     contents: read
-  #     security-events: write
-  #   runs-on: ubuntu-latest
-  #   container:
-  #     image: semgrep/semgrep
-  #   steps:
-  #     - name: Checkout repo
-  #       uses: actions/checkout@v4
-  #     - name: Scan project by semgrep
-  #       run: semgrep scan -c ./semgrep-rules/ --sarif > ./semgrep-results.sarif
-  #       env:
-  #         PYTHONUTF8: 1 # Without it impossible use RU encode
-  #     - name: Upload artifact GitHub
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: semgrep-result
-  #         path: ./semgrep-results.sarif
-  #         if-no-files-found: error
-  #         retention-days: 1
-  #     - name: SARIF to GitHub Security Dashboard
-  #       uses: github/codeql-action/upload-sarif@v3
-  #       with:
-  #         sarif_file: ./semgrep-results.sarif
-  #       if: always() # Upload it in anyway
-  # IaC-Scan:
-  #   name: Infrastructure as Code scanning
-  #   permissions:
-  #     contents: read
-  #     security-events: write
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout repo
-  #       uses: actions/checkout@v4
-  #     - name: Create reports folder
-  #       run:  mkdir -p ./reports
-  #     - name: Run KICS Scan using config
-  #       uses: checkmarx/kics-github-action@v2.1.10
-  #       with:
-  #         path: ./
-  #         output_formats: html,sarif
-  #         output_path: reports/
-  #         ignore_on_exit: results
-  #         exclude_paths: "semgrep-rules/,app/,reports/,.github/"
-  #     - name: Upload artifact GitHub
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: kics-result
-  #         path: ./reports
-  #         if-no-files-found: error
-  #         retention-days: 1
-  #     - name: SARIF to GitHub Security Dashboard
-  #       uses: github/codeql-action/upload-sarif@v3
-  #       with:
-  #         sarif_file: ./reports/results.sarif
-  #       if: always()
+jobs:  # LETS GOOOOO!
+  SCA:
+    name: OSV Scanning project
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@v2.0.3
+    with:
+      scan-args: |-
+        --lockfile=./requirements.txt
+        --no-ignore
+      results-file-name: osv-results.sarif
+      upload-sarif: true
+      fail-on-vuln: false
+  SAST:
+    name: Semgrep (SAST) scanning
+    permissions:
+      contents: read
+      security-events: write
+    runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Scan project by semgrep
+        run: semgrep scan -c ./semgrep-rules/ --sarif > ./semgrep-results.sarif
+        env:
+          PYTHONUTF8: 1  # Without it impossible use RU encode
+      - name: Upload artifact GitHub
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-result
+          path: ./semgrep-results.sarif
+          if-no-files-found: error
+          retention-days: 1
+      - name: SARIF to GitHub Security Dashboard
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ./semgrep-results.sarif
+        if: always()  # Upload it in anyway
+  IaC-Scan:
+    name: Infrastructure as Code scanning
+    permissions:
+      contents: read
+      security-events: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Create reports folder
+        run: mkdir -p ./reports
+      - name: Run KICS Scan using config
+        uses: checkmarx/kics-github-action@v2.1.10
+        with:
+          path: ./
+          output_formats: html,sarif
+          output_path: reports/
+          ignore_on_exit: results
+          exclude_paths: "semgrep-rules/,app/,reports/,.github/"
+      - name: Upload artifact GitHub
+        uses: actions/upload-artifact@v4
+        with:
+          name: kics-result
+          path: ./reports
+          if-no-files-found: error
+          retention-days: 1
+      - name: SARIF to GitHub Security Dashboard
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ./reports/results.sarif
+        if: always()
   BuildContainerImage:
     name: Build Docker Image for current app
     permissions:
@@ -101,43 +99,43 @@ jobs:  # if commanted its work!
         with:
           name: msfwa
           path: ${{ runner.temp }}/msfwa.tar
-  # ContainerScanning:
-  #   name: Container scan of Dockerfile
-  #   permissions:
-  #     contents: read
-  #     security-events: write
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout repo
-  #       uses: actions/checkout@v4
-  #     - name: Download docker image artifact
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: msfwa
-  #         path: ${{ runner.temp }}
-  #     - name: Load docker image
-  #       run: docker load --input ${{ runner.temp }}/msfwa.tar
-  #     - name: Create reports folder
-  #       run: mkdir -p ./reports
-  #     - name: Scan image
-  #       uses: anchore/scan-action@v6
-  #       with:
-  #         image: "msfwa:latest"
-  #         fail-build: false
-  #         output-format: sarif
-  #         output-file: ./reports/report_grype.sarif
-  #     - name: Upload artifact GitHub
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: grype-result
-  #         path: ./reports
-  #         if-no-files-found: error
-  #         retention-days: 1
-  #     - name: SARIF to GitHub Security Dashboard
-  #       uses: github/codeql-action/upload-sarif@v3
-  #       with:
-  #         sarif_file: ./reports/report_grype.sarif
-  #       if: always()
+  ContainerScanning:
+    name: Container scan of Dockerfile
+    permissions:
+      contents: read
+      security-events: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Download Docker Image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: msfwa
+          path: ${{ runner.temp }}
+      - name: Load Docker Image
+        run: docker load --input ${{ runner.temp }}/msfwa.tar
+      - name: Create reports folder
+        run: mkdir -p ./reports
+      - name: Scan image
+        uses: anchore/scan-action@v6
+        with:
+          image: "msfwa:latest"
+          fail-build: false
+          output-format: sarif
+          output-file: ./reports/report_grype.sarif
+      - name: Upload artifact GitHub
+        uses: actions/upload-artifact@v4
+        with:
+          name: grype-result
+          path: ./reports
+          if-no-files-found: error
+          retention-days: 1
+      - name: SARIF to GitHub Security Dashboard
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ./reports/report_grype.sarif
+        if: always()
   DAST:
     name: ZAP by Checkmarx (DAST) scanning
     needs: BuildContainerImage
@@ -179,7 +177,7 @@ jobs:  # if commanted its work!
           allow_issue_writing: false
           fail_action: false
       - name: ZAP JSON to SARIF file
-        uses: githubabcs-devops/zap-to-ghas@6bd41d53c9aa9b663ca79605c7681ba460fa5098  # Other version of ZAP JSON to SARIF
+        uses: githubabcs-devops/zap-to-ghas@6bd41d53c9aa9b663ca79605c7681ba460fa5098  # Thanks to githubabcs-devops & Calin Lupas for fixing that :)
       - name: SARIF to GitHub Security Dashboard
         uses: github/codeql-action/upload-sarif@v3
         with:
