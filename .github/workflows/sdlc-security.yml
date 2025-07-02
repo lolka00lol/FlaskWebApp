@@ -92,15 +92,15 @@ jobs:  # if commanted its work!
         uses: docker/build-push-action@v6
         with:
           file: ./Dockerfile
-          tags: mffa:latest
+          tags: msfwa:latest
           push: false
           load: false
-          outputs: type=docker,dest=${{ runner.temp }}/mffa.tar
+          outputs: type=docker,dest=${{ runner.temp }}/msfwa.tar
       - name: Upload Docker image artifact
         uses: actions/upload-artifact@v4
         with:
-          name: mffa
-          path: ${{ runner.temp }}/mffa.tar
+          name: msfwa
+          path: ${{ runner.temp }}/msfwa.tar
   # ContainerScanning:
   #   name: Container scan of Dockerfile
   #   permissions:
@@ -113,16 +113,16 @@ jobs:  # if commanted its work!
   #     - name: Download docker image artifact
   #       uses: actions/download-artifact@v4
   #       with:
-  #         name: mffa
+  #         name: msfwa
   #         path: ${{ runner.temp }}
   #     - name: Load docker image
-  #       run: docker load --input ${{ runner.temp }}/mffa.tar
+  #       run: docker load --input ${{ runner.temp }}/msfwa.tar
   #     - name: Create reports folder
   #       run: mkdir -p ./reports
   #     - name: Scan image
   #       uses: anchore/scan-action@v6
   #       with:
-  #         image: "mffa:latest"
+  #         image: "msfwa:latest"
   #         fail-build: false
   #         output-format: sarif
   #         output-file: ./reports/report_grype.sarif
@@ -153,12 +153,12 @@ jobs:  # if commanted its work!
       - name: Download docker image artifact
         uses: actions/download-artifact@v4
         with:
-          name: mffa
+          name: msfwa
           path: ${{ runner.temp }}
       - name: Load docker image
-        run: docker load --input ${{ runner.temp }}/mffa.tar
+        run: docker load --input ${{ runner.temp }}/msfwa.tar
       - name: Use Docker image
-        run: docker run -d -p 80:5000 mffa:latest
+        run: docker run -d -p 80:5000 msfwa:latest
       # Docker test
       - name: Wait for service to be ready
         run: |

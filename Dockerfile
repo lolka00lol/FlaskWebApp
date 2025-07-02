@@ -15,5 +15,6 @@ ENV PATH="/flaskapp/work_env/bin:$PATH"
 RUN pip3 install --no-cache-dir -r ./requirements.txt
 EXPOSE 5000
 ENTRYPOINT ["python3.13", "app.py"]
+CMD ["--host", "0.0.0.0"]
 
 HEALTHCHECK --interval=10s --timeout=10s --retries=3 CMD curl -sS 127.0.0.1:5000 || exit 1
