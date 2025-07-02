@@ -79,7 +79,7 @@ jobs:  # if commanted its work!
   #         sarif_file: ./reports/results.sarif
   #       if: always()
   BuildContainerImage:
-    name: Build docker image for current app
+    name: Build Docker Image for current app
     permissions:
       contents: read
     runs-on: ubuntu-latest
@@ -149,17 +149,15 @@ jobs:  # if commanted its work!
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-      # Docker download
-      - name: Download docker image artifact
+      - name: Download Docker Image artifact
         uses: actions/download-artifact@v4
         with:
           name: msfwa
           path: ${{ runner.temp }}
-      - name: Load docker image
+      - name: Load Docker Image
         run: docker load --input ${{ runner.temp }}/msfwa.tar
-      - name: Use Docker image
+      - name: Use Docker Image
         run: docker run -d -p 80:5000 msfwa:latest --nonlocal --testdb
-      # Docker test
       - name: Wait for service to be ready
         run: |
           for i in {1..10}; do
@@ -171,12 +169,7 @@ jobs:  # if commanted its work!
               sleep 5
             fi
           done
-      #
-      # - name: Add some data in DB for DAST
-      #   run: |
-      #     curl -s "http://localhost:80/sqlite?query=INSERT INTO users(username,password) VALUES ('Admin','P@ssw0rd')"
-      #     curl -s "http://localhost:80/sqlite?query=INSERT INTO news(user_id,title,title_imageurl,description) VALUES (1, 'Test post', 'https://cs13.pikabu.ru/post_img/2023/07/09/10/1688919144178579044.jpg', '<script>alert(`XSS?!`);</script>')"
-      - name: ZAP Baseline Scan
+      - name: ZAP Full Scan
         uses: zaproxy/action-full-scan@v0.12.0
         with:
           target: http://localhost/
@@ -185,13 +178,10 @@ jobs:  # if commanted its work!
           cmd_options: '-a'
           allow_issue_writing: false
           fail_action: false
-    # steps:
-    #   - name: Checkout
-    #     uses: actions/checkout@v4
-    #   - name: Upload OSV results to artifacts
-    #     uses: actions/upload-artifact@v4
-    #     with:
-    #       name: OSV-result
-    #       path: ./osv-results.sarif
-    #       if-no-files-fount: error
-    #       retention-days: 1
+      - name: ZAP JSON to SARIF file
+        uses: SvanBoxel/zaproxy-to-ghas@v1.0.2
+      - name: SARIF to GitHub Security Dashboard
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ./results.sarif
+        if: always()
