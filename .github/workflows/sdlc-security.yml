@@ -179,7 +179,7 @@ jobs:  # if commanted its work!
           allow_issue_writing: false
           fail_action: false
       - name: ZAP JSON to SARIF file
-        uses: SvanBoxel/zaproxy-to-ghas@v1.0.2
+        uses: githubabcs-devops/zap-to-ghas@6bd41d53c9aa9b663ca79605c7681ba460fa5098  # Other version of ZAP JSON to SARIF
       - name: SARIF to GitHub Security Dashboard
         uses: github/codeql-action/upload-sarif@v3
         with:
