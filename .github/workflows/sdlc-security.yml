@@ -78,6 +78,7 @@ jobs:  # LETS GOOOOO!
         if: always()
   BuildContainerImage:
     name: Build Docker Image for current app
+    needs: IaC-Scan
     permissions:
       contents: read
     runs-on: ubuntu-latest
