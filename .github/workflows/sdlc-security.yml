@@ -101,6 +101,7 @@ jobs:  # LETS GOOOOO!
           path: ${{ runner.temp }}/msfwa.tar
   ContainerScanning:
     name: Container scan of Dockerfile
+    needs: BuildContainerImage
     permissions:
       contents: read
       security-events: write
