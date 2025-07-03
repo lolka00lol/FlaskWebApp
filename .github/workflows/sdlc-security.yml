@@ -99,44 +99,44 @@ jobs:  # LETS GOOOOO!
         with:
           name: msfwa
           path: ${{ runner.temp }}/msfwa.tar
-  # ContainerScanning:
-  #   name: Container scan of Dockerfile
-  #   needs: BuildContainerImage
-  #   permissions:
-  #     contents: read
-  #     security-events: write
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout repo
-  #       uses: actions/checkout@v4
-  #     - name: Download Docker Image artifact
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: msfwa
-  #         path: ${{ runner.temp }}
-  #     - name: Load Docker Image
-  #       run: docker load --input ${{ runner.temp }}/msfwa.tar
-  #     - name: Create reports folder
-  #       run: mkdir -p ./reports
-  #     - name: Scan image
-  #       uses: anchore/scan-action@v6
-  #       with:
-  #         image: "msfwa:latest"
-  #         fail-build: false
-  #         output-format: sarif
-  #         output-file: ./reports/report_grype.sarif
-  #     - name: Upload artifact GitHub
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: grype-result
-  #         path: ./reports
-  #         if-no-files-found: error
-  #         retention-days: 30
-  #     - name: SARIF to GitHub Security Dashboard
-  #       uses: github/codeql-action/upload-sarif@v3
-  #       with:
-  #         sarif_file: ./reports/report_grype.sarif
-  #       if: always()
+  ContainerScanning:
+    name: Container scan of Dockerfile
+    needs: BuildContainerImage
+    permissions:
+      contents: read
+      security-events: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Download Docker Image artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: msfwa
+          path: ${{ runner.temp }}
+      - name: Load Docker Image
+        run: docker load --input ${{ runner.temp }}/msfwa.tar
+      - name: Create reports folder
+        run: mkdir -p ./reports
+      - name: Scan image
+        uses: anchore/scan-action@v6
+        with:
+          image: "msfwa:latest"
+          fail-build: false
+          output-format: sarif
+          output-file: ./reports/report_grype.sarif
+      - name: Upload artifact GitHub
+        uses: actions/upload-artifact@v4
+        with:
+          name: grype-result
+          path: ./reports
+          if-no-files-found: error
+          retention-days: 30
+      - name: SARIF to GitHub Security Dashboard
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ./reports/report_grype.sarif
+        if: always()
   DAST:
     name: ZAP by Checkmarx (DAST) scanning
     needs: BuildContainerImage
